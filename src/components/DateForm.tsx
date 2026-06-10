@@ -12,10 +12,39 @@ export default function DateForm({ onSubmit }: DateFormProps) {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!date || !time) return;
+
+    setIsSubmitting(true);
+    
+    // We only try to send if an access key is provided, otherwise we just proceed
+    if (true) {
+      try {
+        const response = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            access_key: "1a5a11db-ffb0-4bb6-bdd5-88121aeb5ed0",
+            subject: "New Date Request Confirmed! ❤️",
+            Date: date,
+            Time: time,
+            Message: message || "No message provided",
+          }),
+        });
+        
+        await response.json();
+      } catch (error) {
+        console.error("Failed to send email", error);
+      }
+    }
+
+    setIsSubmitting(false);
     onSubmit(date, time, message);
   };
 
@@ -81,10 +110,14 @@ export default function DateForm({ onSubmit }: DateFormProps) {
 
         <button
           type="submit"
-          disabled={!date || !time}
-          className="w-full py-4 rounded-xl text-white font-bold text-lg bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 shadow-lg hover:shadow-pink-500/30 transition-all transform hover:-translate-y-1 active:translate-y-0 disabled:opacity-50 disabled:hover:translate-y-0 disabled:cursor-not-allowed mt-4"
+          disabled={!date || !time || isSubmitting}
+          className="w-full py-4 rounded-xl text-white font-bold text-lg bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 shadow-lg hover:shadow-pink-500/30 transition-all transform hover:-translate-y-1 active:translate-y-0 disabled:opacity-50 disabled:hover:translate-y-0 disabled:cursor-not-allowed mt-4 flex items-center justify-center"
         >
-          Confirm Date
+          {isSubmitting ? (
+            <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          ) : (
+            "Confirm Date"
+          )}
         </button>
       </form>
     </motion.div>
