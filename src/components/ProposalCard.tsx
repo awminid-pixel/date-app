@@ -65,7 +65,7 @@ export default function ProposalCard({ onYes }: ProposalCardProps) {
       </motion.div>
 
       <h1 className="text-4xl md:text-5xl font-extrabold text-pink-600 dark:text-pink-400 mb-4 tracking-tight text-balance">
-        Will you go on a date with me?
+        will you go on a date with me nastra
       </h1>
       
       <p className="text-lg text-pink-800/70 dark:text-pink-200/70 mb-8 font-medium">
